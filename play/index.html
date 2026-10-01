@@ -1,18 +1,49 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cone Kids Games</title>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>Cone Kids Games</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:#17205d;background:#eef9ff}a{text-decoration:none;color:inherit}
-header{background:#fff;padding:14px 5%;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5}.logo{font-size:32px;font-weight:900;background:linear-gradient(90deg,#ff3c9b,#ffb52c,#20cce5,#765cff);background-clip:text;color:transparent}nav{display:flex;gap:24px;font-weight:800}.playtab{background:#ffc3df;padding:10px 20px;border-radius:24px}
-.hero{min-height:380px;padding:55px 7%;color:white;background:linear-gradient(135deg,#1fc6ef,#56d7e9 48%,#9d6af2);position:relative;overflow:hidden}.sign{display:inline-block;background:#985126;border:5px solid #69361f;border-radius:16px;padding:12px 28px;font-size:64px;font-weight:900;box-shadow:0 8px #60301d}.hero p{font-size:30px;font-weight:800;line-height:1.3}.faces{position:absolute;right:5%;bottom:30px;font-size:90px;letter-spacing:8px}
-main{max-width:1250px;margin:auto;padding:42px 4%}.title{text-align:center;font-size:48px;margin:0}.sub{text-align:center;font-size:21px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:30px}.card{background:white;border-radius:24px;overflow:hidden;text-align:center;box-shadow:0 8px 25px #17205d20}.art{height:230px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#6d50f4,#ff4c9d,#2ccfe7);font-size:55px;font-weight:900;color:white;text-shadow:0 4px #5339a7}.soon{background:linear-gradient(145deg,#6fd4ad,#77baf2);font-size:85px;filter:saturate(.7)}h2{font-size:27px;margin:16px 0 5px}.card p{color:#59628c;margin:5px 12px 18px}.btn{display:block;margin:0 20px 20px;padding:15px;border-radius:28px;background:#ff318d;color:white;font-size:18px;font-weight:900}.off{background:#afb4d3}.banner{margin-top:30px;padding:24px;border-radius:24px;text-align:center;background:linear-gradient(90deg,#755dff,#d452e8,#ff70a4);color:white;font-size:29px;font-weight:900}footer{text-align:center;background:#fff;padding:28px;font-weight:700}
-@media(max-width:850px){nav a:not(.playtab){display:none}.grid{grid-template-columns:1fr 1fr}.faces{opacity:.45;right:-60px}.hero p{position:relative;z-index:2}.sign{font-size:48px}}
-@media(max-width:520px){.grid{grid-template-columns:1fr}.title{font-size:36px}.hero{min-height:340px}.sign{font-size:43px}.logo{font-size:25px}}
-</style></head><body>
-<header><a class="logo" href="/">★ CONE KIDS ★</a><nav><a href="/">Home</a><a href="/#characters">Characters</a><a href="/#videos">Videos</a><a class="playtab" href="/play/">Play</a></nav></header>
-<section class="hero"><div class="sign">GAMES</div><p>Play, explore<br>and have fun with<br>the Cone Kids! ♡</p><div class="faces">🌼 ⚽ ✨</div></section>
-<main><h1 class="title">☆ Cone Kids Games ☆</h1><p class="sub">Fun games for big imaginations!</p>
-<div class="grid">
-<div class="card"><div class="art">CONE<br>POP</div><h2>Cone Pop</h2><p>Match, pop and play with the Cone Kids!</p><a class="btn" href="/play/cone-pop/">▶ PLAY NOW</a></div>
-<div class="card"><div class="art soon">❓</div><h2>New Game</h2><p>Coming soon!</p><div class="btn off">COMING SOON</div></div>
-<div class="card"><div class="art soon">❓</div><h2>New Game</h2><p>Coming soon!</p><div class="btn off">COMING SOON</div></div>
-<div class="card"><div class="art soon">❓</div><h2>New Game</h2><p>Coming soon!</p><div class="btn off">COMING SOON</div></div>
-</div><div class="banner">⭐ More games coming soon! ♡</div></main><footer>© 2026 Cone Kids • Play • Imagine • Have Fun</footer></body></html>
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,sans-serif;color:#0b3474;background:#eaf8ff}
+a{text-decoration:none;color:inherit}.nav{height:68px;background:#fff;display:flex;align-items:center;gap:24px;padding:8px 3%;position:relative;z-index:3;box-shadow:0 2px 8px #0001}
+.logo{font-weight:1000;font-size:clamp(24px,4vw,39px);letter-spacing:-2px;white-space:nowrap}.logo span:nth-child(1){color:#8139db}.logo span:nth-child(2){color:#ff4a9c}.logo span:nth-child(3){color:#ff9d00}.logo span:nth-child(4){color:#53bd38}.logo span:nth-child(5){color:#11aeea}.logo span:nth-child(6){color:#ff3e79}.logo span:nth-child(7){color:#7040d8}.logo span:nth-child(8){color:#ffad00}
+.links{display:flex;align-items:center;justify-content:center;gap:28px;font-weight:800;font-size:14px;flex:1}.links .active{background:#ff9ccc;padding:12px 27px;border-radius:28px}
+.hero{min-height:490px;background:url("hero-cone-kids.png") center 35%/cover no-repeat;position:relative;display:flex;align-items:flex-start;padding:65px 6%}
+.hero:after{content:"";position:absolute;inset:auto 0 0;height:70px;background:linear-gradient(transparent,#eaf8ff)}
+.sign{position:relative;z-index:1;max-width:410px;text-align:center}.wood{display:inline-block;background:linear-gradient(#b86b21,#874612);color:#fff;border:8px solid #9a571d;border-radius:18px;padding:12px 32px;font-weight:1000;font-size:clamp(42px,7vw,72px);transform:rotate(-5deg);text-shadow:0 5px 0 #62320d;box-shadow:0 8px 0 #693813}
+.tag{margin:32px auto 0;color:white;font-size:clamp(22px,3vw,34px);font-weight:900;line-height:1.12;text-shadow:0 3px 8px #166c80;max-width:280px}
+main{max-width:1180px;margin:auto;padding:25px 18px 50px}.title{text-align:center}.title h1{font-size:clamp(34px,5vw,54px);margin:8px 0 2px}.title p{font-size:21px;margin:0 0 25px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.card{background:white;border-radius:20px;overflow:hidden;box-shadow:0 8px 22px #376b9520;text-align:center;display:flex;flex-direction:column}.art{height:230px;background-size:cover;background-position:center;position:relative}.cone{background-image:url("hero-cone-kids.png")}.forest{background:linear-gradient(#7fe1ff,#d6f7b7)}.beach{background:linear-gradient(#73ddff,#ffe59b)}.castle{background:linear-gradient(#c799ff,#dff2ff)}.soon:before{content:"?";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:90px;font-weight:1000;color:white;text-shadow:0 5px 15px #172c65}.card h2{font-size:25px;margin:16px 8px 4px}.card p{margin:0 15px 15px;min-height:44px;line-height:1.35}.btn{display:block;margin:auto 18px 18px;border:0;border-radius:30px;padding:14px;font-weight:1000;font-size:20px;color:#fff;background:#ff2678}.disabled{background:#9ba6c9}
+.features{margin-top:25px;background:#fff;border-radius:25px;display:grid;grid-template-columns:repeat(4,1fr);text-align:center;padding:24px 10px}.feat .icon{font-size:43px}.feat b{display:block;font-size:18px;margin:5px}.feat small{font-size:14px}
+.banner{margin-top:25px;border-radius:24px;background:linear-gradient(100deg,#835cf4,#ff5eaa);color:#fff;text-align:center;padding:30px 20px;font-size:clamp(29px,5vw,48px);font-weight:1000;box-shadow:0 8px 22px #653caa33}
+@media(max-width:760px){.nav{height:auto;min-height:60px}.links a:not(.active){display:none}.links{justify-content:flex-end}.links .active{padding:10px 20px}.hero{min-height:420px;background-position:61% center;padding:28px 18px}.sign{max-width:210px}.wood{font-size:38px;padding:9px 18px;border-width:5px}.tag{font-size:20px;margin-top:22px;max-width:170px}.cards{grid-template-columns:1fr 1fr}.art{height:175px}.features{grid-template-columns:1fr 1fr;gap:22px}.card h2{font-size:21px}}
+@media(max-width:430px){.logo{font-size:24px}.hero{min-height:390px;background-position:59% center}.cards{grid-template-columns:1fr}.art{height:245px}.title p{font-size:17px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="logo" href="/"><span>C</span><span>O</span><span>N</span><span>E</span> <span>K</span><span>I</span><span>D</span><span>S</span> ⭐</a>
+  <div class="links"><a href="/">Home</a><a href="/#characters">Characters</a><a href="/#videos">Videos</a><a href="/#books">Books</a><a href="/#toys">Toys</a><a class="active" href="/play/">Play</a><a href="/#about">About</a></div>
+</nav>
+<section class="hero">
+ <div class="sign"><div class="wood">GAMES</div><div class="tag">Play, explore<br>and have fun<br>with the Cone Kids! ♡</div></div>
+</section>
+<main>
+ <div class="title"><h1>⭐ Cone Kids Games ⭐</h1><p>Fun games for big imaginations!</p></div>
+ <section class="cards">
+   <article class="card"><div class="art cone"></div><h2>Cone Pop</h2><p>Match, pop and play with the Cone Kids!</p><a class="btn" href="/play/cone-pop/">▶ PLAY NOW</a></article>
+   <article class="card"><div class="art forest soon"></div><h2>New Game</h2><p>Adventure, puzzles and surprises!</p><div class="btn disabled">COMING SOON</div></article>
+   <article class="card"><div class="art beach soon"></div><h2>New Game</h2><p>Explore new worlds with the Cone Kids!</p><div class="btn disabled">COMING SOON</div></article>
+   <article class="card"><div class="art castle soon"></div><h2>New Game</h2><p>More fun on the way!</p><div class="btn disabled">COMING SOON</div></article>
+ </section>
+ <section class="features">
+  <div class="feat"><div class="icon">🎮</div><b>PLAY</b><small>Fun and easy<br>games for everyone</small></div>
+  <div class="feat"><div class="icon">💡</div><b>EXPLORE</b><small>Discover new worlds<br>and characters</small></div>
+  <div class="feat"><div class="icon">⭐</div><b>COLLECT</b><small>Unlock surprises<br>and achievements</small></div>
+  <div class="feat"><div class="icon">💗</div><b>HAVE FUN</b><small>New games<br>coming soon!</small></div>
+ </section>
+ <div class="banner">✨ More games coming soon! ⭐</div>
+</main>
+</body></html>
