@@ -2,8 +2,20 @@
   "total": 300,
   "passed": 300,
   "failed": 0,
-  "equip_checks": 4800,
-  "method": "Production-JavaScript event/state tests using instrumented DOM, mouse/touch pointer events and local storage; not real-browser or physical-device tests. Picture export is not exercised.",
+  "equip_checks": 24000,
+  "catalog": {
+    "outfits": 20,
+    "glasses": 20,
+    "hats": 20,
+    "props": 20
+  },
+  "milestones": [
+    60,
+    150,
+    300,
+    500
+  ],
+  "method": "Production JavaScript tested through user-facing event handlers in an instrumented DOM. Includes unlock progression, tap/mouse/touch-pointer equip, repeated-look protection, saved progress, resets and old-save migration. Not real-browser or physical-touchscreen tests. Picture export untested.",
   "rows": [
     {
       "character": "Daisy",
