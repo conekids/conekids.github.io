@@ -1,0 +1,25 @@
+{
+  "total": 300,
+  "passed": 300,
+  "failed": 0,
+  "equip_checks": 4800,
+  "method": "Production-JavaScript event/state tests using instrumented DOM, mouse/touch pointer events and local storage; not real-browser or physical-device tests. Picture export is not exercised.",
+  "rows": [
+    {
+      "character": "Daisy",
+      "passed": 100,
+      "total": 100
+    },
+    {
+      "character": "Sporty",
+      "passed": 100,
+      "total": 100
+    },
+    {
+      "character": "Mystery",
+      "passed": 100,
+      "total": 100
+    }
+  ],
+  "failures": []
+}
