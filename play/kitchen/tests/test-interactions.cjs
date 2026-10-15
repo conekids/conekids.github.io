@@ -1,0 +1,27 @@
+const vm=require('node:vm'),fs=require('node:fs'),assert=require('node:assert/strict'),K=require('../engine'),Art=require('../art');
+class El{
+ constructor(){this.handlers={};this.children=[];this.dataset={};this.style={};this.attrs={};this.disabled=false;this.hidden=false;this.textContent='';const set=new Set();this.classList={add:(x)=>set.add(x),remove:x=>set.delete(x),toggle:(x,v)=>v?set.add(x):set.delete(x)};}
+ addEventListener(type,fn){this.handlers[type]=fn;}setAttribute(k,v){this.attrs[k]=v;}append(e){this.children.push(e);}click(){if(!this.disabled)return this.handlers.click?.({target:this});}remove(){}
+ set innerHTML(v){this.html=v;this.children=[];if(v.includes('data-plate='))for(const m of v.matchAll(/data-plate="(\d+)"/g)){const e=new El();e.dataset.plate=m[1];this.children.push(e);}}
+ get innerHTML(){return this.html||'';}
+ querySelectorAll(selector){return this.children.filter(e=>selector==='[data-plate]'?e.dataset.plate!==undefined:true);}
+ getContext(){return {fillRect(){},fillText(){},drawImage(){}};}toBlob(cb){cb({});}
+}
+const ids={};for(const m of fs.readFileSync(`${__dirname}/../index.html`,'utf8').matchAll(/id="([^"]+)"/g))ids[m[1]]=new El();
+const guest=K.characters.map(x=>{const b=new El();b.dataset.guest=x;return b;}),ingredients=['flour','egg','milk'].map(x=>{const b=new El();b.dataset.ingredient=x;return b;});
+const scene=new El(),footer=new El(),timers=[];let saved=null,downloads=0;
+const doc={getElementById:id=>{assert(ids[id],`Unknown id ${id}`);return ids[id];},querySelector:s=>s==='.scene'?scene:footer,querySelectorAll:s=>s==='[data-guest]'?guest:s==='[data-ingredient]'?ingredients:s==='[data-icing]'?ids.icings.children:s==='[data-topping]'?ids.toppings.children:[],createElement:tag=>{const e=new El();if(tag==='a')e.click=()=>downloads++;return e;},body:new El()};
+class Image{set src(v){queueMicrotask(()=>this.onload());}}
+const context={document:doc,Kitchen:K,KitchenArt:Art,localStorage:{getItem:()=>saved,setItem:(k,v)=>saved=v},window:{},Image,Blob,URL:{createObjectURL:()=> 'blob:test',revokeObjectURL(){}},setTimeout:fn=>timers.push(fn),JSON,Array,String,Number,Promise};vm.createContext(context);vm.runInContext(fs.readFileSync(`${__dirname}/../app.js`,'utf8'),context);
+async function run(){
+ assert.equal(ids.mix.disabled,true);assert.equal(ids['decorate-panel'].hidden,true);
+ for(const b of ingredients)b.click();assert.equal(ids.mix.disabled,false);for(let n=0;n<4;n++)ids.mix.click();assert.equal(ids.bake.hidden,false);
+ ids.bake.click();ids.bake.click();assert.equal(timers.length,1);timers.shift()();assert.equal(ids['decorate-panel'].hidden,false);assert.equal(ids['mix-panel'].hidden,true);
+ ids.bonus.click();assert.equal(ids['order-details'].hidden,false);const t=K.ticket(K.fresh());ids.icings.children.find(b=>b.dataset.icing===t.icing).click();for(let n=0;n<t.count;n++)ids.toppings.children.find(b=>b.dataset.topping===t.topping).click();
+ ids.serve.click();ids.serve.click();assert.equal(ids.coins.textContent,15);assert.equal(ids['served-panel'].hidden,false);assert(ids.reward.textContent.includes('10 bonus'));
+ await ids.picture.click();assert.equal(downloads,1);assert.equal(ids.picture.disabled,false);
+ ids.next.click();assert.equal(ids.coins.textContent,15);assert.equal(ids['mix-panel'].hidden,false);assert.equal(ids['order-details'].hidden,true);
+ for(const b of ingredients)b.click();for(let n=0;n<4;n++)ids.mix.click();ids.bake.click();while(timers.length)timers.shift()();ids.bonus.click();ids.serve.click();assert.equal(ids.coins.textContent,20);assert(!ids.reward.textContent.includes('10 bonus'));assert.equal(JSON.parse(saved).stage,'served');
+ console.log('UI event checks passed: ingredients, mixing, duplicate bake, decorating, optional orders, duplicate serve, PNG download, next creation and local saving.');
+}
+run().catch(e=>{console.error(e);process.exit(1)});
