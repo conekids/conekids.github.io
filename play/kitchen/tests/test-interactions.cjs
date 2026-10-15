@@ -9,19 +9,20 @@ class El{
 }
 const ids={};for(const m of fs.readFileSync(`${__dirname}/../index.html`,'utf8').matchAll(/id="([^"]+)"/g))ids[m[1]]=new El();
 const guest=K.characters.map(x=>{const b=new El();b.dataset.guest=x;return b;}),ingredients=['flour','egg','milk'].map(x=>{const b=new El();b.dataset.ingredient=x;return b;});
-const scene=new El(),footer=new El(),timers=[];let saved=null,downloads=0;
+const scene=new El(),footer=new El(),timers=[],frames=[];let clock=0;function finishAnimation(){let n=0;while(frames.length){assert(n++<100);clock+=100;frames.shift()(clock);}}let saved=null,downloads=0;
 const doc={getElementById:id=>{assert(ids[id],`Unknown id ${id}`);return ids[id];},querySelector:s=>s==='.scene'?scene:footer,querySelectorAll:s=>s==='[data-guest]'?guest:s==='[data-ingredient]'?ingredients:s==='[data-icing]'?ids.icings.children:s==='[data-topping]'?ids.toppings.children:[],createElement:tag=>{const e=new El();if(tag==='a')e.click=()=>downloads++;return e;},body:new El()};
 class Image{set src(v){queueMicrotask(()=>this.onload());}}
-const context={document:doc,Kitchen:K,KitchenArt:Art,localStorage:{getItem:()=>saved,setItem:(k,v)=>saved=v},window:{},Image,Blob,URL:{createObjectURL:()=> 'blob:test',revokeObjectURL(){}},setTimeout:fn=>timers.push(fn),JSON,Array,String,Number,Promise};vm.createContext(context);vm.runInContext(fs.readFileSync(`${__dirname}/../app.js`,'utf8'),context);
+const context={document:doc,Kitchen:K,KitchenArt:Art,localStorage:{getItem:()=>saved,setItem:(k,v)=>saved=v},window:{matchMedia:()=>({matches:false})},requestAnimationFrame:fn=>frames.push(fn),Image,Blob,URL:{createObjectURL:()=> 'blob:test',revokeObjectURL(){}},setTimeout:fn=>timers.push(fn),JSON,Array,String,Number,Promise};vm.createContext(context);vm.runInContext(fs.readFileSync(`${__dirname}/../app.js`,'utf8'),context);
 async function run(){
  assert.equal(ids.mix.disabled,true);assert.equal(ids['decorate-panel'].hidden,true);
- for(const b of ingredients)b.click();assert.equal(ids.mix.disabled,false);for(let n=0;n<4;n++)ids.mix.click();assert.equal(ids.bake.hidden,false);
+ for(const b of ingredients){b.click();assert.equal(ids.picture.disabled,true);finishAnimation();}assert.equal(ids.mix.disabled,false);for(let n=0;n<4;n++)ids.mix.click();assert.equal(ids.bake.hidden,false);
  ids.bake.click();ids.bake.click();assert.equal(timers.length,1);timers.shift()();assert.equal(ids['decorate-panel'].hidden,false);assert.equal(ids['mix-panel'].hidden,true);
- ids.bonus.click();assert.equal(ids['order-details'].hidden,false);const t=K.ticket(K.fresh());ids.icings.children.find(b=>b.dataset.icing===t.icing).click();for(let n=0;n<t.count;n++)ids.toppings.children.find(b=>b.dataset.topping===t.topping).click();
+ ids.bonus.click();assert.equal(ids['order-details'].hidden,false);const t=K.ticket(K.fresh());ids.icings.children.find(b=>b.dataset.icing===t.icing).click();for(let n=0;n<t.count;n++){ids.toppings.children.find(b=>b.dataset.topping===t.topping).click();assert.equal(ids.serve.disabled,true);finishAnimation();}
  ids.serve.click();ids.serve.click();assert.equal(ids.coins.textContent,15);assert.equal(ids['served-panel'].hidden,false);assert(ids.reward.textContent.includes('10 bonus'));
  await ids.picture.click();assert.equal(downloads,1);assert.equal(ids.picture.disabled,false);
  ids.next.click();assert.equal(ids.coins.textContent,15);assert.equal(ids['mix-panel'].hidden,false);assert.equal(ids['order-details'].hidden,true);
- for(const b of ingredients)b.click();for(let n=0;n<4;n++)ids.mix.click();ids.bake.click();while(timers.length)timers.shift()();ids.bonus.click();ids.serve.click();assert.equal(ids.coins.textContent,20);assert(!ids.reward.textContent.includes('10 bonus'));assert.equal(JSON.parse(saved).stage,'served');
- console.log('UI event checks passed: ingredients, mixing, duplicate bake, decorating, optional orders, duplicate serve, PNG download, next creation and local saving.');
+ for(const b of ingredients){b.click();assert.equal(ids.picture.disabled,true);finishAnimation();}for(let n=0;n<4;n++)ids.mix.click();ids.bake.click();while(timers.length)timers.shift()();ids.bonus.click();ids.serve.click();assert.equal(ids.coins.textContent,20);assert(!ids.reward.textContent.includes('10 bonus'));assert.equal(JSON.parse(saved).stage,'served');
+ assert(ingredients[0].innerHTML.includes('<svg'));assert(ids.toppings.children.every(b=>b.innerHTML.includes('<svg')));
+ console.log('Animation and UI event checks passed: animated ingredients, topping landings, input locking, mixing, duplicate bake, decorating, optional orders, duplicate serve, PNG download, next creation and local saving.');
 }
 run().catch(e=>{console.error(e);process.exit(1)});
