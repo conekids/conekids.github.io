@@ -1,0 +1,50 @@
+{
+  "gesture_cases": 240,
+  "passed": 240,
+  "failed": 0,
+  "layout_checks": [
+    {
+      "viewport": "320x568",
+      "sideBySide": true,
+      "figureFits": true,
+      "wardrobeScrollHeight": 238.56
+    },
+    {
+      "viewport": "360x640",
+      "sideBySide": true,
+      "figureFits": true,
+      "wardrobeScrollHeight": 268.8
+    },
+    {
+      "viewport": "390x844",
+      "sideBySide": true,
+      "figureFits": true,
+      "wardrobeScrollHeight": 354.47999999999996
+    },
+    {
+      "viewport": "430x932",
+      "sideBySide": true,
+      "figureFits": true,
+      "wardrobeScrollHeight": 360
+    },
+    {
+      "viewport": "768x1024",
+      "sideBySide": true,
+      "figureFits": true,
+      "wardrobeScrollHeight": 360
+    },
+    {
+      "viewport": "640x360",
+      "sideBySide": true,
+      "figureFits": true,
+      "wardrobeScrollHeight": 220
+    },
+    {
+      "viewport": "740x390",
+      "sideBySide": true,
+      "figureFits": true,
+      "wardrobeScrollHeight": 220
+    }
+  ],
+  "method": "Production pointer-event handlers in an instrumented DOM plus CSS-contract and viewport size-equation checks. Not an actual browser scrolling/layout test or a physical-device test."
+}
