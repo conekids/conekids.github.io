@@ -1,8 +1,15 @@
 const assert=require('node:assert/strict');
-const {fill,undo,point}=require('../engine.js');
+const {fill,undo,point,stroke,finishStroke}=require('../engine.js');
 const sharp=require('sharp');
 (async()=>{
  let checks=0;
+ for(let size=1;size<=36;size++){
+  const pixels=Uint32Array.from({length:64*64},(_,i)=>i%3?0xffeeaa:0x99aacc),original=pixels.slice(),before=new Map();
+  stroke(pixels,64,64,{x:-4,y:2},{x:60,y:61},size/2,0xff0000,before);
+  stroke(pixels,64,64,{x:60,y:61},{x:4,y:10},size/2,0xff0000,before);
+  const c=finishStroke(before);assert(c&&c.indices.length>0);assert.equal(new Set(c.indices).size,c.indices.length);undo(pixels,c);assert.deepEqual(pixels,original);checks++;
+ }
+ const dots=new Uint32Array(100).fill(0xffffff),dotBefore=new Map();stroke(dots,10,10,{x:4,y:4},{x:4,y:4},2,0,dotBefore);assert.equal(dots[44],0);assert.equal(dots[0],0xffffff);undo(dots,finishStroke(dotBefore));assert(dots.every(v=>v===0xffffff));checks++;
  // Closed lines, edge wrapping, no-op taps and exact undo.
  const p=new Uint32Array(25).fill(0xffffff),b=new Uint8Array(25);for(let y=0;y<5;y++)b[y*5+2]=1;
  let change=fill(p,b,5,5,0,0,0xff0000);assert.equal(change.indices.length,10);assert.equal(p[4],0xffffff);undo(p,change);assert(p.every(c=>c===0xffffff));
