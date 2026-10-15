@@ -18,9 +18,9 @@ function act(s,type,value){
  case 'undo':if(s.stage==='decorate')s.toppings.pop();break;
  case 'clear':if(s.stage==='decorate')s.toppings=[];break;
  case 'bonus':if(s.stage!=='served')s.bonus=!s.bonus;break;
- case 'plate':if(Number.isInteger(value)&&plates[value]&&s.coins>=plates[value].at)s.plate=value;break;
+ case 'plate':if(Number.isInteger(value)&&plates[value])s.plate=value;break;
  case 'serve':if(s.stage==='decorate'){
-  const extra=s.bonus&&matches(s)?10:0;s.servedReward={base:5,bonus:extra};s.coins=Math.min(1000000,s.coins+5+extra);s.stage='served';
+  const extra=s.bonus&&matches(s)?10:0;s.servedReward={base:5,bonus:extra};s.stage='served';
  }break;
  case 'next':if(s.stage==='served')return fresh(s.coins,s.round+1,s.guest,s.plate);break;
  }
@@ -30,7 +30,7 @@ function restore(raw){
  const d=fresh();try{const s=JSON.parse(raw);if(!s||typeof s!=='object')return d;
  const coins=Number.isInteger(s.coins)?Math.max(0,Math.min(1000000,s.coins)):0,round=Number.isInteger(s.round)?Math.max(0,Math.min(100000,s.round)):0;
  const out=fresh(coins,round,characters.includes(s.guest)?s.guest:'daisy');
- out.plate=Number.isInteger(s.plate)&&plates[s.plate]&&coins>=plates[s.plate].at?s.plate:0;
+ out.plate=Number.isInteger(s.plate)&&plates[s.plate]?s.plate:0;
  out.ingredients=['flour','egg','milk'].filter(x=>s.ingredients?.includes?.(x));out.mixes=out.ingredients.length===3&&Number.isInteger(s.mixes)?Math.max(0,Math.min(4,s.mixes)):0;
  out.stage=['decorate','served'].includes(s.stage)&&out.mixes===4?s.stage:'mix';out.icing=icing.some(x=>x[0]===s.icing)?s.icing:'pink';
  out.toppings=Array.isArray(s.toppings)?s.toppings.filter(x=>x&&toppings.some(t=>t[0]===x.kind)).slice(0,24).map(x=>({kind:x.kind})):[];out.bonus=s.bonus===true;

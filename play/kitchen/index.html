@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#fff5e5"><title>Cone Valley Kitchen · Cone Kids</title><link rel="stylesheet" href="style.css?v=brand1"></head>
 <body>
-<header><a class="back" href="/play/">← Games</a><a class="brand" href="/" aria-label="Cone Kids home"><span id="brand-fallback" aria-hidden="true"><span>C</span><span>O</span><span>N</span><span>E</span> <span>K</span><span>i</span><span>D</span><span>S</span></span><img id="brand-logo" width="570" height="94" alt="" hidden></a><div class="coin" aria-label="Kitchen coins">🪙 <span id="coins">0</span></div></header>
+<header><a class="back" href="/play/">← Games</a><a class="brand" href="/" aria-label="Cone Kids home"><span id="brand-fallback" aria-hidden="true"><span>C</span><span>O</span><span>N</span><span>E</span> <span>K</span><span>i</span><span>D</span><span>S</span></span><img id="brand-logo" width="570" height="94" alt="" hidden></a><div class="coin" aria-label="Cone Coins">🪙 <span id="coins" data-cone-coins-balance>0</span></div></header>
 <main>
  <div class="heading"><div><span class="eyebrow">A LITTLE MIX. A LOT OF IMAGINATION.</span><h1>Cone Valley Kitchen</h1><p>Make something delicious for your friends.</p></div><button id="sound" class="quiet" aria-pressed="false" aria-label="Turn sound on">🔇 Sound</button></div>
  <section class="kitchen" aria-label="Cupcake kitchen">
@@ -12,13 +12,13 @@
    <p id="message" class="message" role="status" aria-live="polite">Tap each ingredient to add it to the bowl.</p>
   </div>
   <aside class="tools">
-   <section class="order"><div class="order-title"><span>⭐ Optional bonus order</span><button id="bonus" aria-pressed="false">Try it</button></div><p id="order-copy">Make it your way, or follow an order for +10 bonus coins.</p><div id="order-details" hidden></div></section>
+   <section class="order"><div class="order-title"><span>⭐ Optional bonus order</span><button id="bonus" aria-pressed="false">Try it</button></div><p id="order-copy">Make it your way, or follow an order for +10 bonus Cone Coins.</p><div id="order-details" hidden></div></section>
    <section id="mix-panel"><h2>Let’s make a cupcake!</h2><p class="help">Add all three ingredients.</p><div id="ingredients" class="ingredients"><button data-ingredient="flour">🌾<span>Flour</span></button><button data-ingredient="egg">🥚<span>Egg</span></button><button data-ingredient="milk">🥛<span>Milk</span></button></div><button id="mix" class="primary" disabled>🥄 Mix it! <span id="mix-count">0/4</span></button><button id="bake" class="primary bake" hidden>🔥 Bake my cupcake</button></section>
-   <section id="decorate-panel" hidden><h2>Make it yours</h2><label class="label">Choose your icing</label><div id="icings" class="icings" role="group" aria-label="Icing colour"></div><label class="label">Tap toppings to add them</label><div id="toppings" class="toppings"></div><div class="small-actions"><button id="undo">↶ Undo topping</button><button id="clear">Clear toppings</button></div><div id="topping-counts" class="counts" aria-live="polite"></div><button id="serve" class="primary">💛 Serve my cupcake</button><p class="help">Every creation earns 5 coins. Make whatever you like!</p></section>
+   <section id="decorate-panel" hidden><h2>Make it yours</h2><label class="label">Choose your icing</label><div id="icings" class="icings" role="group" aria-label="Icing colour"></div><label class="label">Tap toppings to add them</label><div id="toppings" class="toppings"></div><div class="small-actions"><button id="undo">↶ Undo topping</button><button id="clear">Clear toppings</button></div><div id="topping-counts" class="counts" aria-live="polite"></div><button id="serve" class="primary">💛 Serve my cupcake</button><p class="help">Every creation earns 5 Cone Coins. Make whatever you like!</p></section>
    <section id="served-panel" hidden><div class="celebrate">Lovely baking!</div><p id="reward"></p><button id="next" class="primary">🧁 Make another</button></section>
-   <section class="plates"><div class="label">Your plates <span id="plate-progress"></span></div><div id="plates" class="plate-options" role="group" aria-label="Choose a plate"></div><p class="help">Keep collecting coins for new plates. Your coins are never spent.</p></section>
+   <section class="plates"><div class="label">Your plates <span id="plate-progress"></span></div><div id="plates" class="plate-options" role="group" aria-label="Choose a plate"></div><p class="help">Earn Cone Coins in Kitchen, Dress Up, Cone Pop and Jigsaws. Tap a locked plate to unlock it with Cone Coins.</p></section>
    <button id="picture" class="quiet picture">📷 Take a picture</button>
   </aside>
  </section>
  <p class="footer-note">No rush. No wrong recipes. Just a little kitchen magic. ♡</p>
-</main><script src="brand.js?v=1"></script><script src="engine.js?v=2"></script><script src="art.js?v=2"></script><script src="app.js?v=2"></script></body></html>
+</main><script src="brand.js?v=1"></script><script src="/play/shared/cone-coins.js?v=1"></script><script src="engine.js?v=coins1"></script><script src="art.js?v=2"></script><script src="app.js?v=coins1"></script></body></html>

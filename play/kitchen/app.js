@@ -1,6 +1,6 @@
 'use strict';
 const $=id=>document.getElementById(id),K=Kitchen,storageKey='cone-kids-kitchen-v1';
-let state=K.fresh(),busy=false,sound=false,audio=null,busyMessage='';
+let state=K.fresh(),busy=false,sound=false,audio=null,busyMessage='',walletReady=false;
 try{state=K.restore(localStorage.getItem(storageKey));}catch(e){}
 function persist(){try{localStorage.setItem(storageKey,JSON.stringify(state));}catch(e){document.querySelector('.footer-note').textContent='Have fun! Progress cannot be saved in this browser session.';}}
 function chime(){if(!sound)return;try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();audio.resume();[523,659,784].forEach((f,i)=>{const o=audio.createOscillator(),g=audio.createGain();o.connect(g);g.connect(audio.destination);o.frequency.value=f;g.gain.setValueAtTime(.0001,audio.currentTime+i*.09);g.gain.exponentialRampToValueAtTime(.08,audio.currentTime+i*.09+.01);g.gain.exponentialRampToValueAtTime(.0001,audio.currentTime+i*.09+.25);o.start(audio.currentTime+i*.09);o.stop(audio.currentTime+i*.09+.3);});}catch(e){}}
@@ -24,10 +24,19 @@ function addTopping(kind){
  state=K.act(state,'topping',kind);persist();busy=true;busyMessage='A delicious finishing touch!';render({topping:state.toppings.length-1,progress:0});
  animate(480,p=>drawFood({topping:state.toppings.length-1,progress:p}),()=>{busy=false;busyMessage='';render();});
 }
-function dispatch(type,value){if(busy)return;const oldStage=state.stage;state=K.act(state,type,value);persist();render();if(type==='serve'&&oldStage==='decorate')chime();}
+async function dispatch(type,value){
+ if(busy||!walletReady)return;
+ const oldStage=state.stage;state=K.act(state,type,value);persist();render();
+ if(type==='serve'&&oldStage==='decorate'&&state.stage==='served'){
+  busy=true;busyMessage='A lovely creation! Collecting your Cone Coins…';render();
+  const reward=await ConeCoins.earnOnce('kitchen:cupcake:'+state.round,5+state.servedReward.bonus);
+  busy=false;busyMessage='';render();if(!reward.ok)$('message').textContent='Lovely baking! Your browser could not save the Cone Coins this time.';chime();
+ }
+}
+async function choosePlate(index){if(busy||!walletReady)return;const id='kitchen:plate:'+index;if(!ConeCoins.owns(id)){const result=await ConeCoins.requestUnlock(id);if(!result.ok)return;}dispatch('plate',index);}
 function render(fx={}){
  const guest=state.guest[0].toUpperCase()+state.guest.slice(1),served=state.stage==='served',decorating=state.stage==='decorate';
- $('coins').textContent=state.coins;$('guest').src=`/play/dress-up/assets/${state.guest}.png`;$('guest').alt=guest;
+ $('coins').textContent=ConeCoins.snapshot().balance;$('guest').src=`/play/dress-up/assets/${state.guest}.png`;$('guest').alt=guest;
  document.querySelectorAll('[data-guest]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.guest===state.guest)));
  document.querySelectorAll('[data-ingredient]').forEach(b=>{const added=state.ingredients.includes(b.dataset.ingredient);b.classList.toggle('added',added);b.disabled=added||busy;b.setAttribute('aria-pressed',String(added));});
  $('mix-panel').hidden=state.stage!=='mix';$('decorate-panel').hidden=!decorating;$('served-panel').hidden=!served;
@@ -37,17 +46,17 @@ function render(fx={}){
  document.querySelector('.scene').classList.toggle('served',served);
  ['mix','decorate','served'].forEach(step=>$('step-'+step).classList.toggle('active',step===state.stage));
  $('message').textContent=busy?busyMessage:served?'You made something wonderful. Ready for another?':decorating?'Choose icing and tap toppings. It’s your recipe!':state.ingredients.length<3?'Tap each ingredient to add it to the bowl.':state.mixes<4?'Tap Mix it! to stir your cupcake batter.':'Lovely mixing! Your cupcake is ready for the oven.';
- $('bonus').setAttribute('aria-pressed',String(state.bonus));$('bonus').disabled=served||busy;$('bonus').textContent=state.bonus?'Free play':'Try it';$('order-copy').textContent=state.bonus?'A little challenge, only if you fancy it. Extra decorations are welcome!':'Make it your way, or follow an order for +10 bonus coins.';
+ $('bonus').setAttribute('aria-pressed',String(state.bonus));$('bonus').disabled=served||busy;$('bonus').textContent=state.bonus?'Free play':'Try it';$('order-copy').textContent=state.bonus?'A little challenge, only if you fancy it. Extra decorations are welcome!':'Make it your way, or follow an order for +10 bonus Cone Coins.';
  $('order-details').hidden=!state.bonus;const t=K.ticket(state),ic=K.icing.find(x=>x[0]===t.icing),top=K.toppings.find(x=>x[0]===t.topping);
  $('order-details').innerHTML=`<b style="color:${t.icing==='white'?'#846c4b':ic[2]}">${ic[1]} icing</b><br>${top[2]} ${top[1]} × ${t.count} &nbsp; <b>+10 🪙</b>`;
  document.querySelectorAll('[data-icing]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.icing===state.icing)));
  document.querySelectorAll('[data-topping]').forEach(b=>b.disabled=busy||state.toppings.length>=24);
  $('undo').disabled=$('clear').disabled=busy||!state.toppings.length;$('serve').disabled=busy;$('picture').disabled=busy;document.querySelectorAll('[data-guest]').forEach(b=>b.disabled=busy);document.querySelectorAll('[data-icing]').forEach(b=>b.disabled=busy);
  $('topping-counts').textContent=K.toppings.map(x=>{const n=state.toppings.filter(t=>t.kind===x[0]).length;return n?`${x[2]} × ${n}`:'';}).filter(Boolean).join('  ');
- $('reward').textContent=served?`+5 coins for your creation${state.servedReward.bonus?' + 10 bonus coins for your order!':'!'} 🪙`:'';
- $('plates').innerHTML=K.plates.map((p,i)=>`<button class="plate-option" data-plate="${i}" aria-label="${p.name} plate${state.coins<p.at?`, unlocks at ${p.at} coins`:''}" title="${p.name}${state.coins<p.at?` · ${p.at} coins`:''}" aria-pressed="${state.plate===i}" ${state.coins<p.at?'disabled':''}><span class="disk" style="background:${i===4?'linear-gradient(90deg,#f5a4c9,#ffe6a4,#b3debd,#b7c8fa)':p.colour}"></span>${state.coins<p.at?`<small>🔒${p.at}</small>`:''}</button>`).join('');
- $('plates').querySelectorAll('[data-plate]').forEach(b=>b.addEventListener('click',()=>dispatch('plate',Number(b.dataset.plate))));
- const next=K.plates.find(p=>p.at>state.coins);$('plate-progress').textContent=next?`${next.at-state.coins} coins to ${next.name}`:'All plates unlocked!';
+ $('reward').textContent=served?`+5 Cone Coins for your creation${state.servedReward.bonus?' + 10 bonus Cone Coins for your order!':'!'} 🪙`:'';
+ $('plates').innerHTML=K.plates.map((p,i)=>{const owned=ConeCoins.owns('kitchen:plate:'+i);return `<button class="plate-option" data-plate="${i}" aria-label="${owned?'Choose':'Unlock'} ${p.name} plate${owned?'':` for ${p.at} Cone Coins`}" title="${p.name}${owned?'':` · ${p.at} Cone Coins`}" aria-pressed="${state.plate===i}" ${busy?'disabled':''}><span class="disk" style="background:${i===4?'linear-gradient(90deg,#f5a4c9,#ffe6a4,#b3debd,#b7c8fa)':p.colour}"></span>${owned?'':`<small>🔒${p.at}</small>`}</button>`;}).join('');
+ $('plates').querySelectorAll('[data-plate]').forEach(b=>b.addEventListener('click',()=>choosePlate(Number(b.dataset.plate))));
+ $('plate-progress').textContent=K.plates.filter((p,i)=>ConeCoins.owns('kitchen:plate:'+i)).length+' / '+K.plates.length+' unlocked';
 }
 K.icing.forEach(([id,name,colour])=>{const b=document.createElement('button');b.className='icing';b.style.background=colour;b.dataset.icing=id;b.setAttribute('aria-label',name+' icing');b.title=name;b.addEventListener('click',()=>dispatch('icing',id));$('icings').append(b);});
 K.toppings.forEach(([id,name,emoji])=>{const b=document.createElement('button');b.dataset.topping=id;b.innerHTML=KitchenArt.icon(id)+`<small>${name}</small>`;b.setAttribute('aria-label','Add '+name);b.addEventListener('click',()=>addTopping(id));$('toppings').append(b);});
@@ -69,4 +78,12 @@ $('picture').addEventListener('click',async()=>{
  const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw Error('Export');const download=URL.createObjectURL(blob),a=document.createElement('a');a.href=download;a.download='cone-valley-kitchen.png';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(download),1000);$('message').textContent='Your kitchen picture is ready to save. Check your downloads.';
  }catch(e){$('message').textContent='Your picture couldn’t save this time. You can try again.';}finally{if(url)URL.revokeObjectURL(url);button.disabled=busy;}
 });
-render();
+async function initializeWallet(){
+ busy=true;busyMessage='Getting your Cone Coins ready…';render();
+ await ConeCoins.ready;
+ await ConeCoins.register('kitchen',K.plates.map((p,i)=>({id:'kitchen:plate:'+i,name:p.name+' plate',price:p.at,legacyAt:p.at})));
+ if(!ConeCoins.owns('kitchen:plate:'+state.plate))state.plate=0;
+ if(state.stage==='served')await ConeCoins.earnOnce('kitchen:cupcake:'+state.round,5+state.servedReward.bonus);
+ walletReady=true;busy=false;busyMessage='';render();
+}
+ConeCoins.onChange(()=>{if(walletReady)render();});initializeWallet();
